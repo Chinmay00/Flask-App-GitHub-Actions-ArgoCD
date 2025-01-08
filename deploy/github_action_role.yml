@@ -1,0 +1,113 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: app-role
+  namespace: default
+rules:
+  - apiGroups:
+      - ""  # Core API group
+    resources:
+      - pods
+      - componentstatuses
+      - configmaps
+      - events
+      - endpoints
+      - limitranges
+      - namespaces
+      - persistentvolumes
+      - persistentvolumeclaims
+      - replicationcontrollers
+      - resourcequotas
+      - serviceaccounts
+      - services
+    verbs:
+      - "get"
+      - "list"
+      - "watch"
+      - "create"
+      - "update"
+      - "patch"
+      - "delete"
+
+  - apiGroups:
+      - apps  # Apps API group
+    resources:
+      - daemonsets
+      - deployments
+      - replicasets
+      - statefulsets
+    verbs:
+      - "get"
+      - "list"
+      - "watch"
+      - "create"
+      - "update"
+      - "patch"
+      - "delete"
+
+  - apiGroups:
+      - autoscaling  # Autoscaling API group
+    resources:
+      - horizontalpodautoscalers
+    verbs:
+      - "get"
+      - "list"
+      - "watch"
+      - "create"
+      - "update"
+      - "patch"
+      - "delete"
+
+  - apiGroups:
+      - batch  # Batch API group
+    resources:
+      - jobs
+      - cronjobs
+    verbs:
+      - "get"
+      - "list"
+      - "watch"
+      - "create"
+      - "update"
+      - "patch"
+      - "delete"
+
+  - apiGroups:
+      - extensions  # Extensions API group (deprecated in favor of apps)
+    resources:
+      - ingress
+    verbs:
+      - "get"
+      - "list"
+      - "watch"
+      - "create"
+      - "update"
+      - "patch"
+      - "delete"
+
+  - apiGroups:
+      - policy  # Policy API group
+    resources:
+      - poddisruptionbudgets
+    verbs:
+      - "get"
+      - "list"
+      - "watch"
+      - "create"
+      - "update"
+      - "patch"
+      - "delete"
+
+  - apiGroups:
+      - rbac.authorization.k8s.io  # RBAC API group
+    resources:
+      - roles
+      - rolebindings
+    verbs:
+      - "get"
+      - "list"
+      - "watch"
+      - "create"
+      - "update"
+      - "patch"
+      - "delete"
