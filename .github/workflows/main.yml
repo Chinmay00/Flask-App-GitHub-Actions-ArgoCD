@@ -38,7 +38,7 @@ jobs:
       - name: Docker Credentials
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
+          username: ${{ secrets.DOCKER_USERNAME }} 
           password: ${{ secrets.DOCKER_PASSWORD }}
       
       - name: Docker tag
@@ -50,18 +50,18 @@ jobs:
       # Build the Docker Image
       - name: Build Docker Image
         run: |
-          docker build . -t 1nfosecsingh/demo-app:${{ env.VERSION }} 
+          docker build . -t chinmay334/demo-app:${{ env.VERSION }} 
       
       # Push the Docker Image
       - name: Push Docker Image
         run: |
-          docker push 1nfosecsingh/demo-app:${{ env.VERSION }}
+          docker push chinmay334/demo-app:${{ env.VERSION }}
       
       # UPdate the K8s Manifest Files
       - name: Update K8s Manifests
         run: |
           cat deploy/deploy.yaml
-          sed -i "s|image: 1nfosecsingh/demo-app:.*|image: 1nfosecsingh/demo-app:${{ env.VERSION }}|g" deploy/deploy.yaml
+          sed -i "s|image: chinmay334/demo-app:.*|image: chinmay334/demo-app:${{ env.VERSION }}|g" deploy/deploy.yaml
           cat deploy/deploy.yaml
 
       # Update Github
