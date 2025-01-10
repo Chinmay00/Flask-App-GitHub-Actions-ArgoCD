@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-name: Test, Build, and Deploy (Minikube)
-=======
 name: Test and Build and deploy
->>>>>>> f3b3e7b6789316efcb601a3bce3f7879779f84be
 
 on:
   push:
@@ -12,52 +8,48 @@ on:
       - '**/*'
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    # Checkout code
-      - name: Checkout Code
+    #Setting up environment
+      - name: Checkout code
         uses: actions/checkout@v2
 
-    # Setup Python Environment
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.9'
 
-    # Install Dependencies
-      - name: Install Dependencies
+      - name: Docker Setup
+        uses: docker/setup-buildx-action@v2
+
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install flake8
-
-    # Linting
-      - name: Run Linting Tests
+          
+      # Test the Code
+      - name: Run Linting tests
         run: |
           flake8 --ignore=E501,F401 .
-
-    # Setup Minikube Docker Environment
-      - name: Setup Minikube Docker
-        run: |
-          mkdir -p ~/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > ~/.kube/config
-          minikube start
-          eval $(minikube docker-env)
       
-    # Build Docker Image Inside Minikube
+      - name: Docker Credentials
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Docker tag
+        id: version
+        run: |
+          VERSION=v$(date +"%Y%m%d%H%M%S")
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      # Build the Docker Image
       - name: Build Docker Image
         run: |
-<<<<<<< HEAD
-          docker build . -t demo-app:latest
-          docker images
-
-    # Update Kubernetes Manifests
-      - name: Update Kubernetes Manifests
-        run: |
-          sed -i "s|image: .*|image: demo-app:latest|g" deploy/deploy.yaml
-=======
           docker build . -t chinmay334/demo-app:${{ env.VERSION }} 
       
       # Push the Docker Image
@@ -70,21 +62,14 @@ jobs:
         run: |
           cat deploy/deploy.yaml
           sed -i "s|image: chinmay334/demo-app:.*|image: chinmay334/demo-app:${{ env.VERSION }}|g" deploy/deploy.yaml
->>>>>>> f3b3e7b6789316efcb601a3bce3f7879779f84be
           cat deploy/deploy.yaml
 
-    # Apply Kubernetes Manifests
-      - name: Deploy to Minikube
+      # Update Github
+      - name: Commit the changes
         run: |
-<<<<<<< HEAD
-          kubectl apply -f deploy/deploy.yaml
-          kubectl apply -f svc.yaml
-          kubectl get svc
-=======
           git config --global user.email "chinmay.jadhav3@outlook.com"
           git config --global user.name "GitHub Actions Bot"
           git add deploy/deploy.yaml
           git commit -m "Update deploy.yaml with new image version - ${{ env.VERSION }}"
           git remote set-url origin https://github-actions:${{ secrets.SECRET_TOKEN }}@github.com/Chinmay00/Flask-App-GitHub-Actions-ArgoCD.git
           git push origin master
->>>>>>> f3b3e7b6789316efcb601a3bce3f7879779f84be

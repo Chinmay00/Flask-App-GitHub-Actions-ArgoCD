@@ -1,4 +1,4 @@
-apiVersion: apps/v1  
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: demo-app-deployment
@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: demo-app
-        image: chinmay334/demo-app:v20250109115544
+        image: 1nfosecsingh/demo-app:v20250105121337
         ports:
         - containerPort: 5000
