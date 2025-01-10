@@ -17,3 +17,11 @@ spec:
         image: chinmay334/demo-app:v20250109115544
         ports:
         - containerPort: 5000
+        livenessProbe:
+          httpGet:
+          path: /
+          ports: 5000
+          readinessProbe:
+            httpGet:
+              path: /
+              ports: 5000
